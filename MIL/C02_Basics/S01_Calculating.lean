@@ -7,10 +7,22 @@ example (a b c : ℝ) : a * b * c = b * (a * c) := by
 
 -- Try these.
 example (a b c : ℝ) : c * b * a = b * (a * c) := by
-  sorry
+  rw [mul_comm c b]  -- Rearrange c and b
+  -- b * c * a
+  rw [mul_assoc] -- Associate (b * c) * a to b * (c * a)
+  -- b * (c * a)
+  rw [mul_comm c a] -- Rearrange c and a within the parentheses
+  -- b * (a * c)
+  -- QED
+
 
 example (a b c : ℝ) : a * (b * c) = b * (a * c) := by
-  sorry
+  rw [← mul_assoc a b c] -- Remove association
+  -- a * b * c
+  rw [mul_comm a b] -- Rearrange a * b
+  -- b * a * c
+  rw [mul_assoc] -- Associate  b * (a * c)
+  -- QED
 
 -- An example.
 example (a b c : ℝ) : a * b * c = b * c * a := by
@@ -20,32 +32,81 @@ example (a b c : ℝ) : a * b * c = b * c * a := by
 /- Try doing the first of these without providing any arguments at all,
    and the second with only one argument. -/
 example (a b c : ℝ) : a * (b * c) = b * (c * a) := by
-  sorry
+  rw [mul_comm]
+  rw [mul_assoc]
 
 example (a b c : ℝ) : a * (b * c) = b * (a * c) := by
-  sorry
+  rw [← mul_assoc]  -- Associate a * (b * c) to (a * b) * c
+  -- (a * b) * c
+  rw [mul_comm a]   -- Swap a and b in the expression (a * b)
+  -- (b * a) * c
+  rw [mul_assoc]    -- Re-associate b * (a * c)
+  -- b * (a * c)
+
+
 
 -- Using facts from the local context.
-example (a b c d e f : ℝ) (h : a * b = c * d) (h' : e = f) : a * (b * e) = c * (d * f) := by
+example
+  -- Variables
+  (a b c d e f : ℝ)
+   -- Hypotheses
+  (h : a * b = c * d)
+  (h' : e = f)
+  -- Goal
+  : a * (b * e) = c * (d * f) := by
+  -- Proof
   rw [h']
   rw [← mul_assoc]
   rw [h]
   rw [mul_assoc]
 
-example (a b c d e f : ℝ) (h : b * c = e * f) : a * b * c * d = a * e * f * d := by
-  sorry
+example
+  -- Variables
+  (a b c d e f : ℝ)
+  -- Hypotheses
+  (h : b * c = e * f)
+  -- Goal
+  : a * b * c * d = a * e * f * d := by
+  -- Proof
+  rw [mul_assoc a, h, ← mul_assoc]
 
-example (a b c d : ℝ) (hyp : c = b * a - d) (hyp' : d = a * b) : c = 0 := by
-  sorry
+example
+  -- Variables
+  (a b c d : ℝ)
+  -- Hypotheses
+  (hyp : c = b * a - d)
+  (hyp' : d = a * b)
+  -- Goal
+  : c = 0 := by
+  -- Proof
+  rw [hyp]
+  rw [hyp']
+  rw [mul_comm]
+  rw [sub_self]
 
-example (a b c d e f : ℝ) (h : a * b = c * d) (h' : e = f) : a * (b * e) = c * (d * f) := by
+example
+  -- Variables
+  (a b c d e f : ℝ)
+  -- Hypotheses
+  (h : a * b = c * d)
+  (h' : e = f)
+  -- Goal
+  : a * (b * e) = c * (d * f) := by
+  -- Proof
   rw [h', ← mul_assoc, h, mul_assoc]
 
 section
 
+-- Variables
 variable (a b c d e f : ℝ)
 
-example (h : a * b = c * d) (h' : e = f) : a * (b * e) = c * (d * f) := by
+example
+  -- Hypotheses
+  (h : a * b = c * d)
+  (h' : e = f)
+  -- Goal
+  : a * (b * e) = c * (d * f) := by
+  -- Proof
   rw [h', ← mul_assoc, h, mul_assoc]
 
 end
