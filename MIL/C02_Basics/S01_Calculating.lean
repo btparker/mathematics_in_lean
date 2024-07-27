@@ -156,11 +156,32 @@ end
 section
 variable (a b c d : ℝ)
 
-example : (a + b) * (c + d) = a * c + a * d + b * c + b * d := by
-  sorry
+#check mul_add a b c
 
-example (a b : ℝ) : (a + b) * (a - b) = a ^ 2 - b ^ 2 := by
-  sorry
+example : (a + b) * (c + d) = a * c + a * d + b * c + b * d := by
+  rw [add_mul, mul_add, mul_add b, ← add_assoc]
+
+example : (a + b) * (c + d) = a * c + a * d + b * c + b * d :=
+  calc
+    (a + b) * (c + d)  = a * (c + d) + b * (c + d) := by
+      rw [add_mul]
+    _  = a * c + a * d + b * (c + d) := by
+      rw [mul_add]
+    _  = a * c + a * d + (b * c + b * d) := by
+      rw [mul_add b]
+    _ = a * c + a * d + b * c + b * d := by
+      rw [← add_assoc]
+
+example (a b : ℝ) : (a + b) * (a - b) = a ^ 2 - b ^ 2 :=
+  calc
+    (a + b) * (a - b) =  a * a - a * b + b * a - b * b := by
+      rw [add_mul, mul_sub, mul_sub, add_sub]
+    _ = a ^ 2 - a * b + b * a - b ^ 2 := by
+      rw [← pow_two a, ← pow_two b]
+    _ = a ^ 2 - b * a + b * a - b ^ 2 := by
+      rw [mul_comm]
+    _ = a ^ 2 - b ^ 2 := by
+      ring
 
 #check pow_two a
 #check mul_sub a b c
