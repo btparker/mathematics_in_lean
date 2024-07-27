@@ -145,12 +145,11 @@ example : (a + b) * (a + b) = a * a + 2 * (a * b) + b * b :=
 example : (a + b) * (a + b) = a * a + 2 * (a * b) + b * b :=
   calc
     (a + b) * (a + b) = a * a + b * a + (a * b + b * b) := by
-      sorry
+      rw [mul_add, add_mul, add_mul]
     _ = a * a + (b * a + a * b) + b * b := by
-      sorry
+      rw [← add_assoc, ← add_assoc]
     _ = a * a + 2 * (a * b) + b * b := by
-      sorry
-
+      rw [mul_comm b, two_mul]
 end
 
 -- Try these. For the second, use the theorems listed underneath.
